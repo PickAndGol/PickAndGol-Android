@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 
+import io.keepcoding.pickandgol.manager.net.response.EventsResponse;
 import io.keepcoding.pickandgol.manager.net.response.LoginResponse;
 import io.keepcoding.pickandgol.manager.net.response.UserResponse;
 
@@ -275,6 +276,10 @@ public class NetworkManager {
                 parsedResponse = parseUserResponse(response);
                 break;
 
+            case EVENTS:
+                parsedResponse = parseEventsResponse(response);
+                break;
+
             default:
                 parsedResponse = null;
                 break;
@@ -325,4 +330,19 @@ public class NetworkManager {
         return userEntity;
     }
 
+    @Nullable
+    private EventsResponse parseEventsResponse(String responseString) {
+        EventsResponse eventsEntity = null;
+
+        try {
+            Reader reader = new StringReader(responseString);
+            Gson gson = new GsonBuilder().create();
+            eventsEntity = gson.fromJson(reader, EventsResponse.class);
+        }
+        catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+
+        return eventsEntity;
+    }
 }

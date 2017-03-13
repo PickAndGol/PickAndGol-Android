@@ -28,12 +28,15 @@ import io.keepcoding.pickandgol.dialog.ChooseRemoteUrlDialog;
 import io.keepcoding.pickandgol.dialog.LoginDialog;
 import io.keepcoding.pickandgol.fragment.EditUserFragment;
 import io.keepcoding.pickandgol.fragment.MainContentFragment;
+import io.keepcoding.pickandgol.fragment.NewEventFragment;
 import io.keepcoding.pickandgol.interactor.EditUserInteractor;
 import io.keepcoding.pickandgol.interactor.LoginInteractor;
+import io.keepcoding.pickandgol.interactor.NewEventInteractor;
 import io.keepcoding.pickandgol.interactor.UserDetailInteractor;
 import io.keepcoding.pickandgol.manager.image.ImageManager;
 import io.keepcoding.pickandgol.manager.image.ImageManager.ImageResizeListener;
 import io.keepcoding.pickandgol.manager.session.SessionManager;
+import io.keepcoding.pickandgol.model.Event;
 import io.keepcoding.pickandgol.model.User;
 import io.keepcoding.pickandgol.util.PermissionChecker;
 import io.keepcoding.pickandgol.util.Utils;
@@ -321,6 +324,11 @@ public class MainActivity extends AppCompatActivity {
                 mainDrawer.closeDrawers();
                 break;
 
+            case R.id.drawer_menu_new_event:
+                doShowNewEventFragment();
+                mainDrawer.closeDrawers();
+                break;
+
             default:
 
                 updateFragment(menuItem.getTitle().toString(), null);
@@ -332,6 +340,34 @@ public class MainActivity extends AppCompatActivity {
                 mainDrawer.closeDrawers();
                 break;
         }
+    }
+
+    private void doShowNewEventFragment() {
+        final String token = sm.getSessionToken();
+
+        NewEventFragment fragment = NewEventFragment.getInstance();
+        fragment.setListener(new NewEventFragment.Listener() {
+            @Override
+            public void onSaveButtonPushed(Event newEvent) {
+                NewEventInteractor interactor = new NewEventInteractor();
+                interactor.execute(MainActivity.this, token, newEvent, new NewEventInteractor.Listener() {
+                    @Override
+                    public void onNewEventSuccess(Event event) {
+                        Utils.simpleDialog(MainActivity.this, "New event", "Event added");
+                    }
+
+                    @Override
+                    public void onNewEventFailed(String message) {
+                        Utils.simpleDialog(MainActivity.this, "Error", message);
+                    }
+                });
+            }
+        });
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.mainContentFragment_placeholder, fragment)
+                .commit();
     }
 
 

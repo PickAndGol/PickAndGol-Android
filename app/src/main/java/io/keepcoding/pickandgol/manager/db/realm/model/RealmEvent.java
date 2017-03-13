@@ -3,7 +3,6 @@ package io.keepcoding.pickandgol.manager.db.realm.model;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.keepcoding.pickandgol.model.Event;
@@ -20,7 +19,7 @@ public class RealmEvent extends RealmObject {
     @PrimaryKey
     String id;
     String name;
-    Date date;
+    String date;
     String description;
     String photoUrl;
     String category;
@@ -30,7 +29,7 @@ public class RealmEvent extends RealmObject {
     public RealmEvent() {
     }
 
-    public RealmEvent(String id, String name, Date date, String description,
+    public RealmEvent(String id, String name, String date, String description,
                       String photoUrl, String category, RealmList<RealmPubId> pubs) {
 
         this.id = id;
@@ -53,7 +52,7 @@ public class RealmEvent extends RealmObject {
         return name;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -86,7 +85,7 @@ public class RealmEvent extends RealmObject {
         return this;
     }
 
-    public RealmEvent setDate(Date date) {
+    public RealmEvent setDate(String date) {
         this.date = date;
         return this;
     }
